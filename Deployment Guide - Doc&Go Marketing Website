@@ -1,0 +1,330 @@
+🚀 Deployment Guide - Doc&Go Marketing Website
+This guide covers deploying your Next.js 14 marketing site to various platforms.
+📋 Pre-Deployment Checklist
+Before deploying, ensure you've:
+[ ] Tested locally with npm run build && npm start
+[ ] Updated all placeholder content
+[ ] Added real testimonials
+[ ] Connected email form to backend/service
+[ ] Added analytics (Google Analytics, Plausible, etc.)
+[ ] Verified all links work
+[ ] Tested on mobile devices
+[ ] Run accessibility audit (Lighthouse)
+[ ] Added privacy policy and terms of service pages
+[ ] Set up error tracking (Sentry, LogRocket, etc.)
+[ ] Optimized any images added
+[ ] Updated SEO metadata in app/layout.tsx
+🎯 Option 1: Vercel (Recommended)
+Best for: Next.js sites (made by Next.js creators)
+Why Vercel?
+✅ Zero configuration
+✅ Automatic deployments from Git
+✅ Global CDN
+✅ Free SSL certificates
+✅ Free tier available
+✅ Best performance for Next.js
+Deploy via CLI
+# Install Vercel CLI
+npm i -g vercel
+
+# Navigate to project
+cd docandgo-marketing
+
+# Deploy
+vercel
+
+# Follow prompts:
+# - Link to existing project? No
+# - Project name: docandgo-marketing
+# - Directory: ./
+# - Build command: [auto-detected]
+Deploy via GitHub
+Push code to GitHub repository
+Go to vercel.com
+Click "Add New Project"
+Import your GitHub repository
+Click "Deploy" (settings auto-detected)
+Done! Site will be live at your-project.vercel.app
+Custom Domain
+In Vercel dashboard, go to project settings
+Click "Domains"
+Add your domain (e.g., docandgo.com)
+Update DNS records as shown
+Wait for DNS propagation (5-60 minutes)
+🎨 Option 2: Netlify
+Best for: Ease of use, great free tier
+Deploy via CLI
+# Install Netlify CLI
+npm install -g netlify-cli
+
+# Build the project
+npm run build
+
+# Deploy
+netlify deploy
+
+# For production:
+netlify deploy --prod
+Deploy via GitHub
+Push code to GitHub
+Go to netlify.com
+Click "Add new site" → "Import from Git"
+Select your repository
+Configure build settings:
+Build command: npm run build
+Publish directory: .next
+Click "Deploy site"
+Custom Domain
+In Netlify dashboard, go to "Domain settings"
+Click "Add custom domain"
+Follow DNS configuration instructions
+☁️ Option 3: AWS Amplify
+Best for: AWS ecosystem integration
+Deploy via Console
+Go to AWS Amplify Console
+Click "New app" → "Host web app"
+Connect your Git provider (GitHub, GitLab, etc.)
+Select repository and branch
+Build settings (auto-detected):
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+Click "Save and deploy"
+🔶 Option 4: Cloudflare Pages
+Best for: Performance and DDoS protection
+Deploy via Dashboard
+Push code to GitHub/GitLab
+Go to Cloudflare Pages
+Click "Create a project"
+Connect Git repository
+Configure build:
+Build command: npm run build
+Build output directory: .next
+Click "Save and Deploy"
+🐳 Option 5: Docker + Any VPS
+Best for: Full control, existing infrastructure
+Create Dockerfile
+FROM node:18-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npm run build
+
+FROM node:18-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV production
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+EXPOSE 3000
+ENV PORT 3000
+
+CMD ["node", "server.js"]
+Update next.config.js
+module.exports = {
+  output: 'standalone',
+  reactStrictMode: true,
+}
+Build and Run
+# Build image
+docker build -t docandgo-marketing .
+
+# Run container
+docker run -p 3000:3000 docandgo-marketing
+🖥️ Option 6: Traditional VPS (DigitalOcean, Linode, etc.)
+Best for: Existing server infrastructure
+Prerequisites
+Ubuntu 22.04+ VPS
+Domain pointed to server IP
+SSH access
+Setup
+# SSH into server
+ssh user@your-server-ip
+
+# Install Node.js
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Install PM2
+sudo npm install -g pm2
+
+# Clone repository
+git clone https://github.com/your-username/docandgo-marketing.git
+cd docandgo-marketing
+
+# Install dependencies
+npm install
+
+# Build
+npm run build
+
+# Start with PM2
+pm2 start npm --name "docandgo" -- start
+pm2 save
+pm2 startup
+Nginx Reverse Proxy
+server {
+    listen 80;
+    server_name docandgo.com www.docandgo.com;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+SSL with Let's Encrypt
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d docandgo.com -d www.docandgo.com
+📊 Post-Deployment
+1. Verify Deployment
+[ ] Visit your live URL
+[ ] Test all interactive elements
+[ ] Submit email form
+[ ] Check mobile responsiveness
+[ ] Test all navigation links
+[ ] Verify analytics tracking
+2. Monitor Performance
+Use these tools:
+PageSpeed Insights: https://pagespeed.web.dev
+GTmetrix: https://gtmetrix.com
+WebPageTest: https://www.webpagetest.org
+3. Set Up Monitoring
+Uptime monitoring: UptimeRobot, Pingdom
+Error tracking: Sentry, Rollbar
+Analytics: Google Analytics, Plausible
+4. Security Headers
+Add these headers in your hosting platform:
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: geolocation=(), microphone=(), camera=()
+For Vercel, create vercel.json:
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    }
+  ]
+}
+🔧 Environment Variables
+If you add backend integration:
+Local Development
+Create .env.local:
+NEXT_PUBLIC_API_URL=http://localhost:3001
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+Production
+Add to your hosting platform:
+Vercel: Project Settings → Environment Variables
+Netlify: Site Settings → Environment
+AWS: Amplify Console → Environment Variables
+🚨 Troubleshooting
+Build Fails
+# Clear cache and rebuild
+rm -rf .next
+rm -rf node_modules
+npm install
+npm run build
+Site Not Loading
+Check build logs in hosting dashboard
+Verify domain DNS settings (use dig or nslookup)
+Check SSL certificate status
+Review server logs
+Performance Issues
+Enable Next.js Image Optimization
+Add next/font for font optimization
+Implement code splitting
+Enable compression on server
+📈 Optimization Tips
+1. Enable Caching
+In next.config.js:
+module.exports = {
+  async headers() {
+    return [
+      {
+        source: '/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
+}
+2. Add Sitemap
+Create app/sitemap.ts:
+export default function sitemap() {
+  return [
+    {
+      url: 'https://docandgo.com',
+      lastModified: new Date(),
+    },
+  ]
+}
+3. Add robots.txt
+Create app/robots.ts:
+export default function robots() {
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+    },
+    sitemap: 'https://docandgo.com/sitemap.xml',
+  }
+}
+✅ Launch Checklist
+Final checks before going live:
+[ ] All environment variables set
+[ ] Analytics tracking works
+[ ] Email form submits properly
+[ ] Custom domain configured
+[ ] SSL certificate active
+[ ] All pages load correctly
+[ ] Mobile responsive
+[ ] SEO metadata complete
+[ ] Privacy policy live
+[ ] Terms of service live
+[ ] Error tracking configured
+[ ] Uptime monitoring active
+[ ] Social media cards working
+[ ] Backup strategy in place
+Congratulations! 🎉 Your Doc&Go marketing site is now live!
+Need help? Check the main README.md or create an issue in your repository.
