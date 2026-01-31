@@ -1,0 +1,145 @@
+🚀 Quick Start Guide - Doc&Go Marketing Website
+Get Running in 2 Minutes
+Prerequisites
+Node.js 18+ installed
+npm or yarn
+Installation
+# 1. Navigate to project directory
+cd docandgo-marketing
+
+# 2. Install dependencies
+npm install
+
+# 3. Start development server
+npm run dev
+Visit http://localhost:3000 - Your site is live! 🎉
+What You'll See
+✅ Fully functional marketing website with:
+Responsive design (mobile, tablet, desktop)
+Smooth animations and interactions
+Email signup form with success state
+Interactive feature cards
+Auto-rotating testimonials
+Complete footer with navigation
+Making Changes
+Update Content
+All content is in app/page.tsx:
+// Line ~26: Change features
+const features = [
+  {
+    title: 'Your Title',
+    description: 'Your description',
+    icon: '🎯',
+    stat: 'Your stat'
+  },
+  // ... more features
+];
+
+// Line ~47: Change testimonials
+const testimonials = [
+  {
+    quote: "Your testimonial",
+    author: "Name",
+    role: "Role"
+  },
+  // ... more testimonials
+];
+Change Colors
+Search for these hex codes in app/page.tsx and replace:
+#0f766e - Primary teal (buttons, accents)
+#14b8a6 - Secondary teal (gradients)
+#fafaf9 - Background off-white
+#1a1a1a - Text black
+Change Fonts
+In app/page.tsx, find the Google Fonts import (~line 62):
+@import url('https://fonts.googleapis.com/css2?family=YOUR_FONT&display=swap');
+Deploy to Production
+Option 1: Vercel (Easiest)
+npm i -g vercel
+vercel
+Option 2: Netlify
+npm run build
+# Upload .next folder to Netlify
+Option 3: Traditional Hosting
+npm run build
+npm start
+# Set up reverse proxy to port 3000
+Connect Email Form
+The form currently shows a success message but doesn't send data.
+To connect it to your backend:
+Open app/page.tsx
+Find the handleSubmit function (~line 20)
+Replace with:
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  try {
+    const response = await fetch('/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    
+    if (response.ok) {
+      setSubmitted(true);
+      setEmail('');
+    }
+  } catch (error) {
+    console.error('Signup failed:', error);
+  }
+};
+Create API route at app/api/signup/route.ts
+File Structure
+docandgo-marketing/
+├── app/
+│   ├── page.tsx          ← Main page (EDIT THIS)
+│   ├── layout.tsx        ← SEO metadata
+│   └── globals.css       ← Global styles
+├── package.json          ← Dependencies
+├── README.md             ← Full documentation
+└── [config files]
+Common Tasks
+Add a New Section
+In app/page.tsx, add before the footer:
+<section className="py-20 px-6 bg-white">
+  <div className="max-w-6xl mx-auto">
+    <h2 className="text-4xl font-bold mb-8">Your Section</h2>
+    {/* Your content */}
+  </div>
+</section>
+Change Logo
+Find this code (~line 125):
+<div className="w-10 h-10 bg-gradient-to-br from-[#0f766e] to-[#14b8a6] rounded-lg">
+  D&G
+</div>
+Replace with an <img> tag or your custom logo component.
+Add Analytics
+In app/layout.tsx, add before closing </body>:
+<Script
+  src="https://www.googletagmanager.com/gtag/js?id=YOUR_ID"
+  strategy="afterInteractive"
+/>
+Performance
+The site is production-ready with:
+⚡ Fast initial load
+📱 Mobile-optimized
+♿ Accessible
+🔍 SEO-friendly
+🎨 Smooth animations
+Run npm run build to see production bundle size.
+Need Help?
+📖 Full docs: README.md
+🐛 Issues: Check browser console
+💬 Common issues:
+Port 3000 in use? Try npm run dev -- -p 3001
+Module errors? Run npm install again
+TypeScript errors? Check tsconfig.json
+Next Steps
+✅ Get site running locally
+✏️ Customize content in app/page.tsx
+🎨 Adjust colors/fonts to match brand
+🔌 Connect email form to backend
+📊 Add analytics
+🚀 Deploy to Vercel/Netlify
+✅ Test on all devices
+Happy building! 🎉
