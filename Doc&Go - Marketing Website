@@ -1,0 +1,107 @@
+Doc&Go - Marketing Website
+A production-ready marketing website for Doc&Go, a patient-first digital healthcare platform.
+🚀 Features
+Next.js 14 with App Router
+TypeScript for type safety
+Tailwind CSS for styling
+Fully responsive design
+Accessible components
+SEO optimized with metadata
+Performance optimized with animations
+Modern design with custom fonts (Outfit + Inter)
+📋 Prerequisites
+Node.js 18+
+npm or yarn
+🛠️ Installation
+Install dependencies:
+npm install
+# or
+yarn install
+Run the development server:
+npm run dev
+# or
+yarn dev
+Open http://localhost:3000 in your browser
+🏗️ Build for Production
+npm run build
+npm start
+📁 Project Structure
+docandgo-landing/
+├── app/
+│   ├── layout.tsx       # Root layout with metadata
+│   ├── page.tsx         # Main landing page
+│   └── globals.css      # Global styles
+├── public/              # Static assets
+├── next.config.js       # Next.js configuration
+├── tailwind.config.js   # Tailwind configuration
+├── tsconfig.json        # TypeScript configuration
+└── package.json         # Dependencies
+🎨 Design System
+Colors
+Primary: Emerald/Teal gradient (#00A896 to #028174)
+Secondary: Blue to Cyan (#05668D)
+Background: Warm gray (#FAFAF9)
+Text: Dark gray (#1a1a1a)
+Typography
+Display Font: Outfit (headings, bold elements)
+Body Font: Inter (paragraphs, UI text)
+Key Components
+Hero section with gradient backgrounds
+Feature cards with hover effects
+How it works (step-by-step)
+Privacy-first section
+FAQ accordion
+Email signup form
+Responsive navigation
+🚢 Deployment
+Vercel (Recommended)
+Push code to GitHub
+Import project in Vercel
+Deploy automatically
+Other Platforms
+Netlify: Connect Git repo and deploy
+AWS Amplify: Follow AWS deployment guide
+Custom Server: Build and run with npm run build && npm start
+♿ Accessibility
+Semantic HTML elements
+ARIA labels where needed
+Keyboard navigation support
+Focus states on interactive elements
+Sufficient color contrast ratios
+🔧 Customization
+Update Content
+Edit app/page.tsx to modify:
+Hero copy
+Feature descriptions
+FAQ items
+Footer links
+Update Styles
+Global styles: app/globals.css
+Tailwind config: tailwind.config.js
+Component-specific: inline in page.tsx
+Add Pages
+Create new files in app/ directory:
+app/
+├── about/
+│   └── page.tsx
+├── pricing/
+│   └── page.tsx
+📊 Performance
+Optimized animations (CSS-only where possible)
+Google Fonts with display swap
+Lazy loading for below-fold content
+Minimal JavaScript bundle
+🔒 Environment Variables
+Create .env.local for any environment-specific configuration:
+NEXT_PUBLIC_API_URL=your_api_url
+NEXT_PUBLIC_ANALYTICS_ID=your_analytics_id
+📝 License
+Copyright © 2026 Doc&Go. All rights reserved.
+🤝 Contributing
+This is a production website. For internal contributions:
+Create a feature branch
+Make changes
+Submit pull request
+Wait for review
+📞 Support
+For questions or issues, contact: support@docandgo.com
